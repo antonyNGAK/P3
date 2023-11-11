@@ -313,7 +313,7 @@ function getImage(e) {
   newImage.src = URL.createObjectURL(imageToProcess);
   divExport.style.width = "130px";
   divExport.style.height = "169px";
-  divExport.appendChild(newImg);
+  divExport.appendChild(newImage);
 }
 
 function logout() {
