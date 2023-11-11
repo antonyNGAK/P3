@@ -12,7 +12,7 @@ async function importImages() {
     const gallery = document.querySelector(".gallery");
 
     for (const image of data) {
-         /*Création des balises div, image et paragraphe pour le parent*/
+        /*Création des balises div, image et paragraphe pour le parent*/
         const div = document.createElement("div");
         const img = document.createElement("img");
         const title = document.createElement("p");
@@ -28,21 +28,22 @@ async function importImages() {
 importImages();
 
 /* Ecoute du click et récupération de toutes la galerie*/
-FilterT.addEventListener("click", async function (event) { 
+FilterT.addEventListener("click", async function (event) {
     event.preventDefault();
     const gallery = document.querySelector(".gallery");
-    gallery.innerHTML = ""; 
+    gallery.innerHTML = "";
     importImages();
 })
 
+/* Récupération de la galerie afin de n'afficher que les objets
+      au clique sur le filtre "Objets"
+   */
 FilterO.addEventListener("click", function () {
-    /* Récupération de la galerie afin de n'afficher que les objets
-       au clique sur le filtre "Objets"
-    */
-       displayWorks();
+
+    displayWorks();
 })
 
-async function displayWorks(){
+async function displayWorks() {
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = "";
     const response = await fetch("http://localhost:5678/api/works");
@@ -66,17 +67,37 @@ async function displayWorks(){
     }
 }
 
+/* Récupération de la galerie afin de n'afficher que les appartements
+      au clique sur le filtre "Appartements"
+   */
 FilterA.addEventListener("click", async function () {
-    /* Récupération de la galerie afin de n'afficher que les appartements
-       au clique sur le filtre "Appartements"
-    */
-    displayWorks();
+    const gallery = document.querySelector(".gallery");
+    gallery.innerHTML = "";
+    const response = await fetch("http://localhost:5678/api/works");
+    const data = await response.json();
+    let result = data.filter(item => item.category.name === "Appartements");
+
+    for (const image of result) {
+
+        const div = document.createElement("div");
+        const img = document.createElement("img");
+        const title = document.createElement("p");
+        title.textContent = image.title;
+        /*importation des images spécifiques au filtre*/
+        img.src = image.imageUrl;
+        img.alt = image.title;
+        img.crossOrigin = "anonymous";
+        /*Appelle des images sur la page principale*/
+        div.appendChild(img);
+        div.appendChild(title);
+        gallery.appendChild(div);
+    }
 })
 
+/*Récupération de la galerie afin de n'afficher que
+      les hotels et les restaurants au 'clique' sur le filtre "Hotels & restaurants"
+*/
 FilterH.addEventListener("click", async function () {
-     /*Récupération de la galerie afin de n'afficher que
-       les hotels et les restaurants au 'clique' sur le filtre "Hotels & restaurants"
-     */
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = "";
     const response = await fetch("http://localhost:5678/api/works");
