@@ -1,13 +1,7 @@
-const FilterT =
-  document.querySelector("#tous");
-const FilterO =
-  document.querySelector("#objets");
-const FilterA =
-  document.querySelector("#appartements");
-const FilterH =
-  document.querySelector(
-    "#hotels"
-  );
+const FilterT = document.querySelector("#tous");
+const FilterO = document.querySelector("#objets");
+const FilterA = document.querySelector("#appartements");
+const FilterH = document.querySelector("#hotels");
 
 async function importImages() {
   const data = await worksImport();
@@ -350,3 +344,12 @@ buttons.forEach(button => {
     });
   });
 });
+
+/*ajoutImage.setTimeout(("click", async function (event) {
+  event.preventDefault();
+  const gallery = document.querySelector(".gallery");
+  gallery.innerHTML = "";
+  importImages();
+})
+  
+, 2000);*/
