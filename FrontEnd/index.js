@@ -10,9 +10,8 @@ async function importImages() {
     const data = await response.json();
 
     const gallery = document.querySelector(".gallery");
-
+    /*Création des balises div, image et paragraphe pour le parent*/
     for (const image of data) {
-        /*Création des balises div, image et paragraphe pour le parent*/
         const div = document.createElement("div");
         const img = document.createElement("img");
         const title = document.createElement("p");

@@ -66,7 +66,8 @@ const modalOpened = function (e) {
 
 /* Fermeture de la boite modale et fonctionnement des boutons Close et Précédent */
 const modalClosed = function (e) {
-  if (modal === null) return; /* si la modale est non existante*/
+  //Condition de la non présence de la modal
+  if (modal === null) return;
   e.preventDefault();
   const imgContainer = document.querySelector(".containerImg");
   imgContainer.innerHTML = "";
@@ -120,14 +121,13 @@ async function modalLoad() {
   for (const image of data) {
 
     const div = document.createElement("div");
-    div.classList.add("work-item"); // Ajout d'une classe au parent
+    div.classList.add("work-item"); // Ajout d'une classe au body
     const img = document.createElement("img");
     const title = document.createElement("p");
     const corbeilButton = document.createElement("button");
-    corbeilButton.classList.add("deleted-work");
+    corbeilButton.classList.add("deletePicture");
     corbeilButton.dataset.id =
-      image.id; 
-    title.textContent = "éditer";
+      image.id;
     img.src = image.imageUrl;
     img.crossOrigin = "anonymous";
     corbeilButton.innerHTML = '<i class="fa-sharp fa-solid fa-trash"></i>';
@@ -137,17 +137,16 @@ async function modalLoad() {
     div.appendChild(corbeilButton);
     imgContainer.appendChild(div);
   }
-  /* Ecoute du click, Suppression de travaux et création d'une variable Token */
+  /* Ecoute du click, Suppression des travaux */
   const deleteButtons =
     document.querySelectorAll(
-      ".deleted-work"
+      ".deletePicture"
     );
   deleteButtons.forEach((button) => {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
       let workId =
-        button.dataset
-          .id;
+        button.dataset.id;
       const token = localStorage.getItem("Token");
       await fetch(`http://localhost:5678/api/works/${workId}`, {
         method: "DELETE",
@@ -156,8 +155,8 @@ async function modalLoad() {
           Authorization: `Bearer ${token}`,
         },
       });
-      const deletedWorkDiv = button.closest(".work-item");
-      deletedWorkDiv.remove();
+      const deleteDivWork = button.closest(".work-item");
+      deleteDivWork.remove();
     });
   });
 }
@@ -235,6 +234,7 @@ async function previousButton() {
   formModal.style.display = "none";
   formModal.reset();
 }
+/*Ecoute du click sur le bouton précédent*/
 const boutonPrevious = document.querySelector(".boutonP");
 boutonPrevious.addEventListener("click", previousButton);
 
@@ -245,10 +245,10 @@ async function createWork() {
   const categoryForm = document.getElementById("category").value;
 
   if (!imageForm || !titleForm || !categoryForm) {
-    alert("Veuillez remplir tous les champs du formulaire.");
+    alert("Veuillez complété tous les champs du formulaire.");
     return;
   }
-
+  /*Gestion d'autorisation d'ajout ou de retrait des travaux dans la modal*/
   const formData = new FormData();
   formData.append("image", imageForm);
   formData.append("title", titleForm);
@@ -274,11 +274,12 @@ async function createWork() {
       previousButton()
     })
     .catch((error) => {
-      console.error("problem dans l'operation fetch :", error);
+      console.error("syntaxe erreur :", error);
     });
 }
 
 
+/*Ecoute du bouton valider lorsqu'on rajoute une image à la modal et à la galerie*/
 document.getElementById("modalForm").addEventListener("submit", function (event) {
   event.preventDefault();
   createWork();
@@ -303,16 +304,18 @@ function getImage(e) {
   console.log(e.target.files[0]);
   console.log("images", e.target.files[0]);
   const imageToProcess = e.target.files[0];
+  //Ajout d'une nouvelle image au body
   let newImage = new Image(imageToProcess.width, imageToProcess.height);
   newImage.src = URL.createObjectURL(imageToProcess);
   divExport.style.width = "130px";
   divExport.style.height = "169px";
   divExport.appendChild(newImage);
 }
-
+//Déconnexion de la page admin
 function logout() {
   localStorage.removeItem("Token");
 }
+/* Ecoute du click sur le bouton Logout*/
 targetLogout = document.querySelector("#boutonLogout");
 targetLogout.addEventListener("click", logout);
 
@@ -321,7 +324,7 @@ function checkAccess() {
   const token = localStorage.getItem("Token");
   if (!token) {
     window.location.href = 'index.html';
-    alert("Vous n'avez pas accès à la page d'administration");
+    alert("Accès à la page administrateur refusé");
   }
 }
 
@@ -345,11 +348,3 @@ buttons.forEach(button => {
   });
 });
 
-/*ajoutImage.setTimeout(("click", async function (event) {
-  event.preventDefault();
-  const gallery = document.querySelector(".gallery");
-  gallery.innerHTML = "";
-  importImages();
-})
-  
-, 2000);*/
